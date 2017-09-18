@@ -1,6 +1,7 @@
-
-* Please upload only compressed sessions in tar.bz2 format
-* Please add <session_id>/<expn> tag to README.md
+Please:
+* upload only compressed sessions in tar.bz2 format
+* add \<session_id\>/\<expID\> tag to README.md (see experiment ID/descriptions [here](https://github.com/radical-experiments/rp-paper-ipdps2018/wiki))
+* add output of `radical-stack`
 
     * RP branch: experiment/ipdps2018
     * RS branch: experiment/ipdps2018
