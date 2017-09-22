@@ -17,4 +17,11 @@ Please:
     * rp.session.titan-ext1.merzky1.017424.0000  1p * 8kcores   32ku * 8cores
 
 
+### weak scaling
+
+    run_64_32_2048_60.log      rp.session.titan-ext1.merzky1.017431.0001
+    run_128_32_4096_60.log     rp.session.titan-ext1.merzky1.017431.0004
+    run_256_32_8192_60.log     rp.session.titan-ext1.merzky1.017431.0000
+    run_512_32_16384_60.log    rp.session.titan-ext1.merzky1.017431.0005
+
 
