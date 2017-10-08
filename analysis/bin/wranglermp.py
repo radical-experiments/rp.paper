@@ -349,7 +349,7 @@ def load_pilots(sid, exp, sra_pilots, pdm, pu_rels, pts):
             try:
                 ps[state].append(pentity.timestamps(state=state)[0])
             except:
-                print ' WARNING: Failed to get timestampe for state %s' % \
+                print ' WARNING: Failed to get timestamp for state %s' % \
                     state
                 ps[state].append(np.nan)
 
@@ -449,7 +449,7 @@ def load_units(sid, exp, sra_units, udm, pilots, sra, pu_rels, uts):
         if punit:
             punit = punit[0]
         else:
-            print 'DEBUG: pu_rels.items():\n' % pu_rels.items()
+            print '\nDEBUG: pu_rels.items():\n' % pu_rels.items()
             print 'WARNING: empty pilot name for unit %s' % uid
             punit = None
         hid = pilots[(pilots['sid'] == sid) &
