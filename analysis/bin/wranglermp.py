@@ -642,7 +642,7 @@ def wrangle_session(sdir, sid):
 
     # RA objects cannot be serialize: every RA session object need
     # to be constructed at every run.
-    sra_session = ra.Session(sid, 'radical.pilot', src=sdir)
+    sra_session = ra.Session(sdir, 'radical.pilot')
 
     # Pilot-unit relationship dictionary
     pu_rels = sra_session.describe('relations', ['pilot', 'unit'])
