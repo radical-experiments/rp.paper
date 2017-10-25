@@ -41,7 +41,7 @@ if __name__ == '__main__':
         pd_init = {'resource'      : 'ornl.titan_orte',
                    'runtime'       : ptime,
                    'exit_on_error' : True,
-                   'project'       : 'BIP149',
+                   'project'       : 'CSC230', 
                    'queue'         : 'batch',
                    'access_schema' : 'local',
                    'cores'         : psize + 16 * 3
@@ -54,8 +54,8 @@ if __name__ == '__main__':
         cuds  = list()
         for i in range(0, ucount):
             cud = rp.ComputeUnitDescription()
-            cud.executable = 'radical-synapse-sample'
-            cud.arguments  = '-f 40000000000 -s 18'.split()
+            cud.executable = '/bin/sleep'
+            cud.arguments  = ['15']
             cud.cores      = usize
             cud.mpi        = True
             cuds.append(cud)
