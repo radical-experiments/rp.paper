@@ -15,7 +15,7 @@ Please:
     * rp.session.titan-ext1.merzky1.017423.0023  1p * 2kcores    4ku * 8cores
     * rp.session.titan-ext1.merzky1.017423.0028  1p * 2kcores   16ku * 8cores
     * rp.session.titan-ext1.merzky1.017424.0000  1p * 8kcores   32ku * 8cores
-    * rp.session.titan-ext1.itoman.017458.0003   1p * 1kcores    1ku * 1core (test synapse profile from Manuel)
+    * rp.session.titan-ext2.itoman.017465.0001   1p * 1kcores    1ku * 1core (test synapse profile from Manuel)
 
 
 ### weak scaling
