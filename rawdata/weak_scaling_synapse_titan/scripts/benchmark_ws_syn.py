@@ -23,18 +23,20 @@ dh = ru.DebugHelper()
 #
 if __name__ == '__main__':
 
-    ucount = int(sys.argv[1])
-    usize  = int(sys.argv[2])
-    psize  = int(sys.argv[3])
-    ptime  = int(sys.argv[4])
+    sid    =     sys.argv[1]
+    ucount = int(sys.argv[2])
+    usize  = int(sys.argv[3])
+    psize  = int(sys.argv[4])
+    ptime  = int(sys.argv[5])
 
+    print "sid     : %s" % sid
     print "ucount  : %s" % ucount
     print "usize   : %s" % usize 
     print "psize   : %s" % psize 
     print "ptime   : %s" % ptime 
     print
 
-    session = rp.Session()
+    session = rp.Session(uid=sid)
     print "session : %s" % session.uid
 
     try:
