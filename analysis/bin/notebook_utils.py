@@ -98,14 +98,23 @@ event_list = [
       {ru.STATE: None                           , ru.EVENT: 'schedule_ok'     }, # Scheduling stop
       {ru.STATE: 'AGENT_EXECUTING_PENDING'      , ru.EVENT: 'state'           }, # Queuing Execution start
       {ru.STATE: 'AGENT_EXECUTING'              , ru.EVENT: 'state'           }, # Queuing Execution stop  | Preparing Execution start
-      {ru.STATE: None                           , ru.EVENT: 'exec_mkdir'      }, # Creating Directory start
-      {ru.STATE: None                           , ru.EVENT: 'exec_mkdir_done' }, # Creating Directory stop
-      {ru.STATE: None                           , ru.EVENT: 'exec_start'      }, # Preparing Execution stop | Spawning start
-      {ru.STATE: None                           , ru.EVENT: 'exec_ok'         }, # Spawned | Execution start
-      {ru.STATE: None                           , ru.EVENT: 'exec_stop'       }, # Executed
-      {ru.STATE: None                           , ru.EVENT: 'unschedule_start'}, # Unscheduling start
-      {ru.STATE: None                           , ru.EVENT: 'unschedule_stop' }, # Unscheduling stop
-    # {ru.STATE: 'AGENT_STAGING_OUTPUT_PENDING' , ru.EVENT: 'state'           },
+      {ru.STATE: None                           , ru.EVENT: 'exec_mkdir'      }, # Agent Executing Component
+      {ru.STATE: None                           , ru.EVENT: 'exec_mkdir_done' }, # Agent Executing Component
+      {ru.STATE: None                           , ru.EVENT: 'exec_start'      }, # Agent Executing Component
+      {ru.STATE: None                           , ru.EVENT: 'exec_ok'         }, # System OS
+      {ru.STATE: None                           , ru.EVENT: 'cu_start'        }, # System OS
+      {ru.STATE: None                           , ru.EVENT: 'cu_cd_done'      }, # CU script
+      {ru.STATE: None                           , ru.EVENT: 'cu_pre_start'    }, # CU script
+      {ru.STATE: None                           , ru.EVENT: 'cu_pre_stop'     }, # CU script
+      {ru.STATE: None                           , ru.EVENT: 'cu_exec_start'   }, # CU script [orterun spawner]
+      {ru.STATE: None                           , ru.EVENT: 'app_start'       }, # Synapse
+      {ru.STATE: None                           , ru.EVENT: 'app_stop'        }, # Synapse, orterun [orterun spawner]
+      {ru.STATE: None                           , ru.EVENT: 'cu_exec_stop'    }, # CU script
+      {ru.STATE: None                           , ru.EVENT: 'cu_post_start'   }, # CU script
+      {ru.STATE: None                           , ru.EVENT: 'cu_post_stop'    }, # CU script
+      {ru.STATE: None                           , ru.EVENT: 'exec_stop'       }, # Agent Executing Component
+      {ru.STATE: None                           , ru.EVENT: 'unschedule_start'}, # Agent Scheduling Component
+      {ru.STATE: None                           , ru.EVENT: 'unschedule_stop' }, # Agent Scheduling Component    # {ru.STATE: 'AGENT_STAGING_OUTPUT_PENDING' , ru.EVENT: 'state'           },
     # {ru.STATE: 'UMGR_STAGING_OUTPUT_PENDING'  , ru.EVENT: 'state'           },
     # {ru.STATE: 'UMGR_STAGING_OUTPUT'          , ru.EVENT: 'state'           },
     # {ru.STATE: 'AGENT_STAGING_OUTPUT'         , ru.EVENT: 'state'           },
@@ -198,28 +207,46 @@ def get_df_unit_events(session):
     df = df.reset_index()
 
     # Rename events to make them intellegible
-    df.rename_axis(                                          # Components
-        {'index'                   :'uid',
-         'schedule_try'            :'Started Schedule',      # Agent Scheduling Component
-         'schedule_ok'             :'Scheduled',             # Agent Scheduling Component
-         'AGENT_EXECUTING_PENDING' :'Queued Execution',      # Agent Executing Component
-         'AGENT_EXECUTING'         :'Started Pre-Execution', # Agent Executing Component
-         'exec_mkdir'              :'Started Make directory',# Agent Executing Component
-         'exec_mkdir_done'         :'Made directory',        # Agent Executing Component
-         'exec_start'              :'Started Spawn',         # Agent Executing Component
-         'exec_ok'                 :'Started Execution',     # Agent Executing Component
-         'exec_stop'               :'Executed',              # Agent Executing Component
-         'unschedule_start'        :'Started Unschedule',    # Agent Scheduling Component
-         'unschedule_stop'         :'Unscheduled'},          # Agent Scheduling Component
+    df.rename_axis(                                           # Components
+        {'index'                   :'uid'                   ,
+         'schedule_try'            :'Scheduler Schedule'    , # Agent Scheduling Component
+         'schedule_ok'             :'Scheduler Scheduled'   , # Agent Scheduling Component
+         'AGENT_EXECUTING_PENDING' :'Scheduler Queued'      , # Agent Scheduling Component
+         'AGENT_EXECUTING'         :'Executor Execute'      , # Agent Executing Component
+         'exec_mkdir'              :'Executor Make Dir'     , # Agent Executing Component
+         'exec_mkdir_done'         :'Executor Made Dir'     , # Agent Executing Component
+         'exec_start'              :'Executor Spawn'        , # Agent Executing Component
+         'exec_ok'                 :'OS Accepted Spawn'     , # System OS
+         'cu_start'                :'OS Spawn'              , # System OS
+         'cu_cd_done'              :'CU Changed Dir'        , # CU script
+         'cu_pre_start'            :'CU Pre-execute'        , # CU script
+         'cu_pre_stop'             :'CU Pre-executed'       , # CU script
+         'cu_exec_start'           :'CU Spawn'              , # CU script [orterun spawner]
+         'app_start'               :'Exe Execute'           , # Synapse
+         'app_stop'                :'Exe Executed'          , # Synapse [orterun spawner]
+         'cu_exec_stop'            :'CU Executed'           , # CU script
+         'cu_post_start'           :'CU Post-execute'       , # CU script
+         'cu_post_stop'            :'CU Post-executed'      , # CU script
+         'exec_stop'               :'Executor Executed'     , # Agent Executing Component
+         'unschedule_start'        :'Scheduler Unschedule'  , # Agent Scheduling Component
+         'unschedule_stop'         :'Scheduler Unscheduled'}, # Agent Scheduling Component
         axis='columns', inplace=True)
 
-    # Durations
-    df['Scheduling']          = df['Scheduled']             - df['Started Schedule']
-    df['Queuing Execution']   = df['Started Pre-Execution'] - df['Queued Execution']
-    df['Preparing Execution'] = df['Started Execution']     - df['Started Pre-Execution']
-    df['Making directory']    = df['Made directory']        - df['Started Make directory']
-    df['Spawning']            = df['Started Execution']     - df['Started Spawn']
-    df['Executing']           = df['Executed']              - df['Started Execution']
-    df['Unscheduling']        = df['Unscheduled']           - df['Started Unschedule']
+    # Durations sub-component level
+    df['Scheduler Scheduling']       = df['Scheduler Scheduled']   - df['Scheduler Schedule']
+    df['Scheduler Queuing Executor'] = df['Executor Execute']      - df['Scheduler Queued']
+    df['Executor Pre-executing']     = df['Executor Spawn']        - df['Executor Execute']
+    df['Executor Making Dir']        = df['Executor Made Dir']     - df['Executor Make Dir']
+    df['Executor Spawning']          = df['OS Accepted Spawn']     - df['Executor Spawn']
+    df['OS Spawning']                = df['OS Spawn']              - df['OS Accepted Spawn']
+    df['CU Changing Dir']            = df['CU Changed Dir']        - df['OS Spawn']
+    df['CU Pre-executing']           = df['CU Pre-executed']       - df['CU Pre-execute']
+    df['CU Spawning']                = df['Exe Execute']           - df['CU Spawn']
+    df['Exe Executing']              = df['Exe Executed']          - df['Exe Execute']
+    df['Scheduler Unscheduling']     = df['Scheduler Unscheduled'] - df['Scheduler Unschedule']
+
+    # Durations component level
+
+    # Durations chunk level
 
     return df
