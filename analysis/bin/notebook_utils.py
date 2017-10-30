@@ -199,51 +199,49 @@ def get_df_unit_events(session):
         data[thing.uid] = tstamps
 
     # We sort the entities by the timestamp of the first event
-    # Also, for all timestamps, we move the baseline to the first
-    # timestamp in the list
     df = pd.DataFrame.from_dict(data)
-    df = df.sort_values(by=list(df.columns))
+#    df = df.sort_values(by=list(df.columns))
     df = df.transpose()
     df = df.reset_index()
 
     # Rename events to make them intellegible
     df.rename_axis(                                           # Components
         {'index'                   :'uid'                   ,
-         'schedule_try'            :'Scheduler Schedule'    , # Agent Scheduling Component
-         'schedule_ok'             :'Scheduler Scheduled'   , # Agent Scheduling Component
-         'AGENT_EXECUTING_PENDING' :'Scheduler Queued'      , # Agent Scheduling Component
-         'AGENT_EXECUTING'         :'Executor Execute'      , # Agent Executing Component
-         'exec_mkdir'              :'Executor Make Dir'     , # Agent Executing Component
-         'exec_mkdir_done'         :'Executor Made Dir'     , # Agent Executing Component
-         'exec_start'              :'Executor Spawn'        , # Agent Executing Component
-         'exec_ok'                 :'OS Accepted Spawn'     , # System OS
-         'cu_start'                :'OS Spawn'              , # System OS
-         'cu_cd_done'              :'CU Changed Dir'        , # CU script
-         'cu_pre_start'            :'CU Pre-execute'        , # CU script
-         'cu_pre_stop'             :'CU Pre-executed'       , # CU script
-         'cu_exec_start'           :'CU Spawn'              , # CU script [orterun spawner]
-         'app_start'               :'Exe Execute'           , # Synapse
-         'app_stop'                :'Exe Executed'          , # Synapse [orterun spawner]
-         'cu_exec_stop'            :'CU Executed'           , # CU script
-         'cu_post_start'           :'CU Post-execute'       , # CU script
-         'cu_post_stop'            :'CU Post-executed'      , # CU script
-         'exec_stop'               :'Executor Executed'     , # Agent Executing Component
-         'unschedule_start'        :'Scheduler Unschedule'  , # Agent Scheduling Component
-         'unschedule_stop'         :'Scheduler Unscheduled'}, # Agent Scheduling Component
+         'schedule_try'            :'Scheduler Starts Schedule'  , # Agent Scheduling Component
+         'schedule_ok'             :'Scheduler Stops Schedule'   , # Agent Scheduling Component
+         'AGENT_EXECUTING_PENDING' :'Scheduler Queues CU'        , # Agent Scheduling Component
+         'AGENT_EXECUTING'         :'Executor Starts'            , # Agent Executing Component
+         'exec_mkdir'              :'Executor Starts Mkdir'      , # Agent Executing Component
+         'exec_mkdir_done'         :'Executor Stops Mkdir'       , # Agent Executing Component
+         'exec_start'              :'Executor Spawns CU'         , # Agent Executing Component
+         'exec_ok'                 :'OS Accepts Spawned CU'      , # System OS
+         'cu_start'                :'OS Spawns CU'               , # System OS
+         'cu_cd_done'              :'CU Changes Dir'             , # CU script
+         'cu_pre_start'            :'CU Starts Pre-execute'      , # CU script
+         'cu_pre_stop'             :'CU Stops Pre-execute'       , # CU script
+         'cu_exec_start'           :'CU Spawns Executable'       , # CU script [orterun spawner]
+         'app_start'               :'Executable Starts'          , # Synapse
+         'app_stop'                :'Executable Stops'           , # Synapse [orterun spawner]
+         'cu_exec_stop'            :'CU Spawn Returns'           , # CU script
+         'cu_post_start'           :'CU Starts Post-execute'     , # CU script
+         'cu_post_stop'            :'CU Stops Post-executed'     , # CU script
+         'exec_stop'               :'Executor Stops'             , # Agent Executing Component
+         'unschedule_start'        :'Scheduler Starts Unschedule', # Agent Scheduling Component
+         'unschedule_stop'         :'Scheduler Stops Unschedule'}, # Agent Scheduling Component
         axis='columns', inplace=True)
 
     # Durations sub-component level
-    df['Scheduler Scheduling']       = df['Scheduler Scheduled']   - df['Scheduler Schedule']
-    df['Scheduler Queuing Executor'] = df['Executor Execute']      - df['Scheduler Queued']
-    df['Executor Pre-executing']     = df['Executor Spawn']        - df['Executor Execute']
-    df['Executor Making Dir']        = df['Executor Made Dir']     - df['Executor Make Dir']
-    df['Executor Spawning']          = df['OS Accepted Spawn']     - df['Executor Spawn']
-    df['OS Spawning']                = df['OS Spawn']              - df['OS Accepted Spawn']
-    df['CU Changing Dir']            = df['CU Changed Dir']        - df['OS Spawn']
-    df['CU Pre-executing']           = df['CU Pre-executed']       - df['CU Pre-execute']
-    df['CU Spawning']                = df['Exe Execute']           - df['CU Spawn']
-    df['Exe Executing']              = df['Exe Executed']          - df['Exe Execute']
-    df['Scheduler Unscheduling']     = df['Scheduler Unscheduled'] - df['Scheduler Unschedule']
+    df['Scheduler Scheduling']       = df['Scheduler Stops Schedule']   - df['Scheduler Starts Schedule']
+    df['Scheduler Queuing Executor'] = df['Executor Starts']            - df['Scheduler Queues CU']
+    df['Executor Pre-executing']     = df['Executor Spawns CU']         - df['Executor Starts']
+    df['Executor Making Dir']        = df['Executor Stops Mkdir']       - df['Executor Starts Mkdir']
+    df['Executor Spawning']          = df['OS Accepts Spawned CU']      - df['Executor Spawns CU']
+    df['OS Spawning']                = df['OS Spawns CU']               - df['OS Accepts Spawned CU']
+    df['CU Changing Dir']            = df['CU Changes Dir']             - df['OS Spawns CU']
+    df['CU Pre-executing']           = df['CU Stops Pre-execute']       - df['CU Starts Pre-execute']
+    df['CU Spawning']                = df['Executable Starts']          - df['CU Spawns Executable']
+    df['Executable Executing']       = df['Executable Stops']           - df['Executable Starts']
+    df['Scheduler Unscheduling']     = df['Scheduler Stops Unschedule'] - df['Scheduler Starts Unschedule']
 
     # Durations component level
 
