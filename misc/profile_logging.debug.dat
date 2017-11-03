@@ -1,0 +1,24 @@
+test_0:  1.94 s/10.000 calls
+test_1:  2.05 s/10.000 calls
+test_2:  1.93 s/10.000 calls
+test_3:  2.10 s/10.000 calls
+test_4:  2.00 s/10.000 calls
+test_5: 21.40 s/10.000 calls
+test_6: 21.18 s/10.000 calls
+
+test_7 nodes:     1  cores:         16:  0.00 s/10 calls
+test_7 nodes:     2  cores:         32:  0.00 s/10 calls
+test_7 nodes:     4  cores:         64:  0.00 s/10 calls
+test_7 nodes:     8  cores:        128:  0.00 s/10 calls
+test_7 nodes:    16  cores:        256:  0.00 s/10 calls
+test_7 nodes:    32  cores:        512:  0.00 s/10 calls
+test_7 nodes:    64  cores:       1024:  0.00 s/10 calls
+test_7 nodes:   128  cores:       2048:  0.01 s/10 calls
+test_7 nodes:   256  cores:       4096:  0.01 s/10 calls
+test_7 nodes:   512  cores:       8192:  0.02 s/10 calls
+test_7 nodes:  1024  cores:      16384:  0.04 s/10 calls
+test_7 nodes:  2048  cores:      32768:  0.08 s/10 calls
+test_7 nodes:  4096  cores:      65536:  0.15 s/10 calls
+test_7 nodes:  8192  cores:     131072:  0.30 s/10 calls
+test_7 nodes: 16384  cores:     262144:  0.60 s/10 calls
+test_7 nodes: 32768  cores:     524288:  1.18 s/10 calls
