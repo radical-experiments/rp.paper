@@ -5,13 +5,15 @@ import timeit
 import pprint
 import radical.utils as ru
 
-logger = ru.get_logger('radical.pilot', target='t.log', level='ERROR')
+logger = ru.get_logger('radical.pilot', target='t.log', level='DEBUG')
 
 logger.info('info')
 logger.debug('debug')
 
 FREE = 'Free'
 BUSY = 'Busy'
+
+url_0 = ru.Url('ssh+pbs://user:pass@titan.ornl.gov:1234/path/to/file?query#stuff')
 
 
 def get_slots(nodes, cpn):
@@ -59,24 +61,28 @@ def test_1():
 def test_2():
     logger.info('info %s' % 'test')
 
-# string log, delayed expansion of generated cheap message
+# string log, immediate expansion of a RU.Url
 def test_3():
+    logger.info('info %s' % str(url_0))
+
+# string log, delayed expansion of generated cheap message
+def test_4():
     logger.info('info %s', msg_0())
 
 # string log, immediate expansion of generated cheap message
-def test_4():
+def test_5():
     logger.info('info %s' % msg_0())
 
 # string log, delayed expansion of generated costly message
-def test_5():
+def test_6():
     logger.info('info %s', msg_1())
 
 # string log, immediate expansion of generated costly message
-def test_6():
+def test_7():
     logger.info('info %s' % msg_1())
 
 # string log, immediate expansion of generated costly message
-def test_7():
+def test_8():
     logger.info('info %s', slot_status())
 
 
