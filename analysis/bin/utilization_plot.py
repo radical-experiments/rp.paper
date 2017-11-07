@@ -281,7 +281,7 @@ if __name__ == '__main__':
                 parts += utilization[sid][p]
                 print '%-10s: %s' % (p, utilization[sid][p])
         print 'pilot: %10.4f - %10.4f = %7.4f' % (tot, parts, tot - parts)
-      # assert(abs(tot - parts) < 0.0001), '%s == %s' % (tot, parts)
+        assert(abs(tot - parts) < 0.0001), '%s == %s' % (tot, parts)
 
         # same for unit consistency
         parts  = 0.0
@@ -351,8 +351,8 @@ if __name__ == '__main__':
             if ABSOLUTE: data[key].append(util_abs)
             else       : data[key].append(util_rel)
 
-      # assert(abs(tot_abs - sum_abs) < 0.0001)
-      # assert(abs(tot_rel - sum_rel) < 0.0001)
+        assert(abs(tot_abs - sum_abs) < 0.0001)
+        assert(abs(tot_rel - sum_rel) < 0.0001)
       # print 'abs: %10.1f - %10.1f = %4.1f' % (tot_abs, sum_abs, tot_abs-sum_abs)
       # print 'rel: %10.1f - %10.1f = %4.1f' % (tot_rel, sum_rel, tot_rel-sum_rel)
 
@@ -371,11 +371,13 @@ if __name__ == '__main__':
         bottom += data[key]
         labels.append(TRANSLATE_KEYS[key])
 
-    plt.ylabel('number of compute units')
+    if ABSOLUTE: plt.ylabel('utilization (% of total resources)')
+    else       : plt.ylabel('utilization (in core-seconds)')
+
+    plt.xlabel('number of compute units')
     plt.ylabel('utilization (% of total resources)')
     plt.title ('pilot utilization over workload size (#units)')
     plt.xticks(ind, xkeys)
-  # plt.yticks(np.arange(0, 81, 10))
     handles = [p[0] for p in plots]
     plt.legend(handles, labels, ncol=5, loc='upper left', bbox_to_anchor=(0,1.13))
     plt.savefig('08c_core_utilization.png')
