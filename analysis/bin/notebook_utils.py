@@ -32,13 +32,13 @@ mpl.rcParams['font.serif']  = ['Nimbus Roman Becker No9L']
 
 # Font sizes
 SIZE = 24
-plt.rc('font', size=SIZE)  # controls default text sizes
-plt.rc('axes', titlesize=SIZE)  # fontsize of the axes title
-plt.rc('axes', labelsize=SIZE)  # fontsize of the x any y labels
-plt.rc('xtick', labelsize=SIZE)  # fontsize of the tick labels
-plt.rc('ytick', labelsize=SIZE)  # fontsize of the tick labels
-plt.rc('legend', fontsize=SIZE-2)  # legend fontsize
-plt.rc('figure', titlesize=SIZE)  # # size of the figure title
+plt.rc('font'  , size      = SIZE  ) # controls default text sizes
+plt.rc('axes'  , titlesize = SIZE  ) # fontsize of the axes title
+plt.rc('axes'  , labelsize = SIZE  ) # fontsize of the x any y labels
+plt.rc('xtick' , labelsize = SIZE  ) # fontsize of the tick labels
+plt.rc('ytick' , labelsize = SIZE  ) # fontsize of the tick labels
+plt.rc('legend', fontsize  = SIZE-2) # legend fontsize
+plt.rc('figure', titlesize = SIZE  ) # size of the figure title
 
 # Use thinner lines for axes to avoid distractions.
 mpl.rcParams['axes.linewidth']    = 0.75
@@ -224,24 +224,26 @@ def get_df_unit_events(session):
          'app_stop'                :'Executable Stops'           , # Synapse [orterun spawner]
          'cu_exec_stop'            :'CU Spawn Returns'           , # CU script
          'cu_post_start'           :'CU Starts Post-execute'     , # CU script
-         'cu_post_stop'            :'CU Stops Post-executed'     , # CU script
+         'cu_post_stop'            :'CU Stops Post-execute'      , # CU script
          'exec_stop'               :'Executor Stops'             , # Agent Executing Component
          'unschedule_start'        :'Scheduler Starts Unschedule', # Agent Scheduling Component
          'unschedule_stop'         :'Scheduler Stops Unschedule'}, # Agent Scheduling Component
         axis='columns', inplace=True)
 
     # Durations sub-component level
-    df['Scheduler Scheduling']       = df['Scheduler Stops Schedule']   - df['Scheduler Starts Schedule']
-    df['Scheduler Queuing Executor'] = df['Executor Starts']            - df['Scheduler Queues CU']
-    df['Executor Pre-executing']     = df['Executor Spawns CU']         - df['Executor Starts']
-    df['Executor Making Dir']        = df['Executor Stops Mkdir']       - df['Executor Starts Mkdir']
-    df['Executor Spawning']          = df['OS Accepts Spawned CU']      - df['Executor Spawns CU']
-    df['OS Spawning']                = df['OS Spawns CU']               - df['OS Accepts Spawned CU']
-    df['CU Changing Dir']            = df['CU Changes Dir']             - df['OS Spawns CU']
-    df['CU Pre-executing']           = df['CU Stops Pre-execute']       - df['CU Starts Pre-execute']
-    df['CU Spawning']                = df['Executable Starts']          - df['CU Spawns Executable']
-    df['Executable Executing']       = df['Executable Stops']           - df['Executable Starts']
-    df['Scheduler Unscheduling']     = df['Scheduler Stops Unschedule'] - df['Scheduler Starts Unschedule']
+    df['Scheduler Scheduling']   = df['Scheduler Stops Schedule']   - df['Scheduler Starts Schedule']
+    df['Scheduler Queuing CU']   = df['Executor Starts']            - df['Scheduler Queues CU']
+    df['Executor Starting']      = df['Executor Starts Mkdir']      - df['Executor Starts']
+    df['Executor Making Dir']    = df['Executor Stops Mkdir']       - df['Executor Starts Mkdir']
+    df['Executor Spawning CU']   = df['OS Accepts Spawned CU']      - df['Executor Spawns CU']
+    df['OS Spawning CU']         = df['OS Spawns CU']               - df['OS Accepts Spawned CU']
+    df['CU Changing Dir']        = df['CU Changes Dir']             - df['OS Spawns CU']
+    df['CU Pre-executing']       = df['CU Stops Pre-execute']       - df['CU Starts Pre-execute']
+    df['CU Spawning Executable'] = df['Executable Starts']          - df['CU Spawns Executable']
+    df['Executable Executing']   = df['Executable Stops']           - df['Executable Starts']
+    df['CU Post-executing']      = df['CU Stops Post-execute']      - df['CU Starts Post-execute']
+    df['Executor Stopping']      = df['Executor Stops']             - df['CU Stops Post-execute']
+    df['Scheduler Unscheduling'] = df['Scheduler Stops Unschedule'] - df['Scheduler Starts Unschedule']
 
     # Durations component level
 
