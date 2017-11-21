@@ -7,6 +7,9 @@ import datetime
 
 import radical.utils as ru
 
+root = 'data/strong_scaling_synapse_titan/'
+root = 'data/weak_scaling_synapse_titan/optimized/'
+root = './'
 args = sys.argv[1:]
 
 event_map = {
@@ -30,11 +33,11 @@ for log in args:
     if not log.endswith('.log'):
         raise ValueError('%s is not a logfile' % log)
 
-    slog = '/'.join(log.split('/')[1:])
-    slog = log
+    blog = '/'.join(log.split('/')[-3:])
+  # blog = log
+  # blog = os.path.basename(log)
 
-    prof = 'data/weak_scaling_synapse_titan/optimized/%s.prof' % slog[:-4]
-    prof = 'data/strong_scaling_synapse_titan/%s.prof'         % slog[:-4]
+    prof = '%s/%s.prof' % (root, blog[:-4])
 
     if not os.path.isfile(prof):
       # print '! %s' % prof
