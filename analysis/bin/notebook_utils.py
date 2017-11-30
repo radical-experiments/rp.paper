@@ -161,7 +161,7 @@ def fig_hdouble_setup():
 
 
 # load ra session objects.
-def load_sessions(sdir, sessions, snunits):
+def load_sessions_units(sdir, sessions, snunits):
     # number of units in the sessions
     # snunits = sorted(sessions.nunit.unique().tolist())
 
@@ -174,6 +174,23 @@ def load_sessions(sdir, sessions, snunits):
             exp = s.loc[sid]['experiment']
             src = '%s/%s/%s' % (sdir, exp, sid)
             sras[snunit].append(ra.Session(src, 'radical.pilot'))
+
+    return sras
+
+# load ra session objects.
+def load_sessions_cores(sdir, sessions, sncores):
+    # number of units in the sessions
+    # snunits = sorted(sessions.nunit.unique().tolist())
+
+    # load the RA session objects
+    sras = {}
+    for sncore in sncores:
+        sras[sncore] = []
+        s = sessions[(sessions.ncore == sncore)]
+        for sid in s.sid.tolist():
+            exp = s.loc[sid]['experiment']
+            src = '%s/%s/%s' % (sdir, exp, sid)
+            sras[sncore].append(ra.Session(src, 'radical.pilot'))
 
     return sras
 
@@ -205,7 +222,7 @@ def get_df_unit_events(session):
     df = df.reset_index()
 
     # Rename events to make them intellegible
-    df.rename_axis(                                           # Components
+    df.rename(                                           # Components
         {'index'                   :'uid'                   ,
          'schedule_try'            :'Scheduler Starts Schedule'  , # Agent Scheduling Component
          'schedule_ok'             :'Scheduler Stops Schedule'   , # Agent Scheduling Component
