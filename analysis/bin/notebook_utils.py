@@ -137,8 +137,10 @@ event_durations = {
 # ----------------------------------------------------------------------------
 
 # Return a single plot without right and top axes, spanning one column text.
-def fig_setup():
-    fig = plt.figure(figsize=(13,7))
+def fig_setup(figsize=None):
+    if not figsize:
+        figsize = (13,7)
+    fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
