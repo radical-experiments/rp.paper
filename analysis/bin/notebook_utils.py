@@ -225,7 +225,8 @@ def get_df_unit_events(session):
 
     # Rename events to make them intellegible
     df.rename(                                           # Components
-        {'index'                   :'uid'                   ,
+        {'index'                   :'uid'                        ,
+         'get'                     :'DB Bridge Pulls'            , # Agent Component
          'schedule_try'            :'Scheduler Starts Schedule'  , # Agent Scheduling Component
          'schedule_ok'             :'Scheduler Stops Schedule'   , # Agent Scheduling Component
          'AGENT_EXECUTING_PENDING' :'Scheduler Queues CU'        , # Agent Scheduling Component
@@ -241,7 +242,7 @@ def get_df_unit_events(session):
          'cu_exec_start'           :'CU Spawns Executable'       , # CU script [orterun spawner]
          'app_start'               :'Executable Starts'          , # Synapse
          'app_stop'                :'Executable Stops'           , # Synapse [orterun spawner]
-         'cu_exec_stop'            :'CU Spawn Returns'           , # CU script
+         'cu_exec_stop'            :'CU Spawn Returns'           , # CU script (call it process)
          'cu_post_start'           :'CU Starts Post-execute'     , # CU script
          'cu_post_stop'            :'CU Stops Post-execute'      , # CU script
          'exec_stop'               :'Executor Stops'             , # Agent Executing Component
