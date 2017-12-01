@@ -84,15 +84,15 @@ for i in range(len(tableau20)):
 
 # List of events of RP
 event_list = [
-    # {ru.STATE: 'NEW'                          , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_SCHEDULING_PENDING'      , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_SCHEDULING'              , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_STAGING_INPUT_PENDING'   , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_STAGING_INPUT'           , ru.EVENT: 'state'           },
-    # {ru.STATE: 'AGENT_STAGING_INPUT_PENDING'  , ru.EVENT: 'state'           },
-    # {ru.COMP : 'agent_0'                      , ru.EVENT: 'get'             },
-    # {ru.STATE: 'AGENT_STAGING_INPUT'          , ru.EVENT: 'state'           },
-    # {ru.STATE: 'AGENT_SCHEDULING_PENDING'     , ru.EVENT: 'state'           },
+      {ru.STATE: 'NEW'                          , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_SCHEDULING_PENDING'      , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_SCHEDULING'              , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_STAGING_INPUT_PENDING'   , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_STAGING_INPUT'           , ru.EVENT: 'state'           },
+      {ru.STATE: 'AGENT_STAGING_INPUT_PENDING'  , ru.EVENT: 'state'           },
+      {ru.COMP : 'agent_0'                      , ru.EVENT: 'get'             },
+      {ru.STATE: 'AGENT_STAGING_INPUT'          , ru.EVENT: 'state'           },
+      {ru.STATE: 'AGENT_SCHEDULING_PENDING'     , ru.EVENT: 'state'           },
       {ru.STATE: None                           , ru.EVENT: 'schedule_try'    }, # Scheduling start
     # {ru.STATE: 'AGENT_SCHEDULING'             , ru.EVENT: 'state'           },
       {ru.STATE: None                           , ru.EVENT: 'schedule_ok'     }, # Scheduling stop
