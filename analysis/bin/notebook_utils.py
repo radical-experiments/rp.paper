@@ -84,15 +84,15 @@ for i in range(len(tableau20)):
 
 # List of events of RP
 event_list = [
-    # {ru.STATE: 'NEW'                          , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_SCHEDULING_PENDING'      , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_SCHEDULING'              , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_STAGING_INPUT_PENDING'   , ru.EVENT: 'state'           },
-    # {ru.STATE: 'UMGR_STAGING_INPUT'           , ru.EVENT: 'state'           },
-    # {ru.STATE: 'AGENT_STAGING_INPUT_PENDING'  , ru.EVENT: 'state'           },
-    # {ru.COMP : 'agent_0'                      , ru.EVENT: 'get'             },
-    # {ru.STATE: 'AGENT_STAGING_INPUT'          , ru.EVENT: 'state'           },
-    # {ru.STATE: 'AGENT_SCHEDULING_PENDING'     , ru.EVENT: 'state'           },
+      {ru.STATE: 'NEW'                          , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_SCHEDULING_PENDING'      , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_SCHEDULING'              , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_STAGING_INPUT_PENDING'   , ru.EVENT: 'state'           },
+      {ru.STATE: 'UMGR_STAGING_INPUT'           , ru.EVENT: 'state'           },
+      {ru.STATE: 'AGENT_STAGING_INPUT_PENDING'  , ru.EVENT: 'state'           },
+      {ru.COMP : 'agent_0'                      , ru.EVENT: 'get'             },
+      {ru.STATE: 'AGENT_STAGING_INPUT'          , ru.EVENT: 'state'           },
+      {ru.STATE: 'AGENT_SCHEDULING_PENDING'     , ru.EVENT: 'state'           },
       {ru.STATE: None                           , ru.EVENT: 'schedule_try'    }, # Scheduling start
     # {ru.STATE: 'AGENT_SCHEDULING'             , ru.EVENT: 'state'           },
       {ru.STATE: None                           , ru.EVENT: 'schedule_ok'     }, # Scheduling stop
@@ -137,8 +137,10 @@ event_durations = {
 # ----------------------------------------------------------------------------
 
 # Return a single plot without right and top axes, spanning one column text.
-def fig_setup():
-    fig = plt.figure(figsize=(13,7))
+def fig_setup(figsize=None):
+    if not figsize:
+        figsize = (13,7)
+    fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -161,7 +163,7 @@ def fig_hdouble_setup():
 
 
 # load ra session objects.
-def load_sessions(sdir, sessions, snunits):
+def load_sessions_units(sdir, sessions, snunits):
     # number of units in the sessions
     # snunits = sorted(sessions.nunit.unique().tolist())
 
@@ -174,6 +176,23 @@ def load_sessions(sdir, sessions, snunits):
             exp = s.loc[sid]['experiment']
             src = '%s/%s/%s' % (sdir, exp, sid)
             sras[snunit].append(ra.Session(src, 'radical.pilot'))
+
+    return sras
+
+# load ra session objects.
+def load_sessions_cores(sdir, sessions, sncores):
+    # number of units in the sessions
+    # snunits = sorted(sessions.nunit.unique().tolist())
+
+    # load the RA session objects
+    sras = {}
+    for sncore in sncores:
+        sras[sncore] = []
+        s = sessions[(sessions.ncore == sncore)]
+        for sid in s.sid.tolist():
+            exp = s.loc[sid]['experiment']
+            src = '%s/%s/%s' % (sdir, exp, sid)
+            sras[sncore].append(ra.Session(src, 'radical.pilot'))
 
     return sras
 
@@ -205,8 +224,9 @@ def get_df_unit_events(session):
     df = df.reset_index()
 
     # Rename events to make them intellegible
-    df.rename_axis(                                           # Components
-        {'index'                   :'uid'                   ,
+    df.rename(                                           # Components
+        {'index'                   :'uid'                        ,
+         'get'                     :'DB Bridge Pulls'            , # Agent Component
          'schedule_try'            :'Scheduler Starts Schedule'  , # Agent Scheduling Component
          'schedule_ok'             :'Scheduler Stops Schedule'   , # Agent Scheduling Component
          'AGENT_EXECUTING_PENDING' :'Scheduler Queues CU'        , # Agent Scheduling Component
@@ -222,7 +242,7 @@ def get_df_unit_events(session):
          'cu_exec_start'           :'CU Spawns Executable'       , # CU script [orterun spawner]
          'app_start'               :'Executable Starts'          , # Synapse
          'app_stop'                :'Executable Stops'           , # Synapse [orterun spawner]
-         'cu_exec_stop'            :'CU Spawn Returns'           , # CU script
+         'cu_exec_stop'            :'CU Spawn Returns'           , # CU script (call it process)
          'cu_post_start'           :'CU Starts Post-execute'     , # CU script
          'cu_post_stop'            :'CU Stops Post-execute'      , # CU script
          'exec_stop'               :'Executor Stops'             , # Agent Executing Component
