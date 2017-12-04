@@ -48,12 +48,12 @@ mpl.rcParams['ytick.major.width'] = 0.75
 mpl.rcParams['ytick.minor.width'] = 0.75
 mpl.rcParams['lines.linewidth'] = 2
 
-
 # Do not use a box for the legend to avoid distractions.
 mpl.rcParams['legend.frameon'] = False
 
 # Restore part of matplotlib 1.5 behavior
 mpl.rcParams['patch.force_edgecolor'] = True
+mpl.rcParams['patch.edgecolor'] = 'black'
 mpl.rcParams['errorbar.capsize'] = 3
 
 # Use coordinated colors. These are the "Tableau 20" colors as
@@ -76,7 +76,7 @@ tableau20 = [(31 , 119, 180), (174, 199, 232), # blue        [ 0,1 ]
 # matplotlib accepts.
 for i in range(len(tableau20)):
     r, g, b = tableau20[i]
-    tableau20[i] = (r / 255., g / 255., b / 255.)
+    tableau20[i] = (round(r/255.,1), round(g/255.,1), round(b/255.,1))
 
 # ----------------------------------------------------------------------------
 # RCT Configurations
