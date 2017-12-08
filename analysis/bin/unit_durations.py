@@ -88,11 +88,13 @@ def main():
             for dname in UNIT_DURATIONS:
                 dur = unit.duration(event=UNIT_DURATIONS[dname])
                 data[dname].append(dur)
-                sys.stdout.write('.')
-                sys.stdout.flush()
                 if dur > 1000.0:
-                    fout.write('10.1f  %s\n' % (dur, src))
+                    fout.write('%10.1f  %s\n' % (dur, src))
                     fout.flush()
+                    sys.stdout.write('#')
+                else:
+                    sys.stdout.write('.')
+                sys.stdout.flush()
 
         print
 
