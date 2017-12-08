@@ -70,6 +70,8 @@ def main():
 
     # get the numbers we actually want to plot
     fout = open('outliers.dat', 'w')
+    ucnt = 0
+    ocnt = 0
     for src in sources:
 
         # always point to the tarballs
@@ -87,12 +89,14 @@ def main():
         for unit in units.get():
             for dname in UNIT_DURATIONS:
                 dur = unit.duration(event=UNIT_DURATIONS[dname])
-                data[dname].append(dur)
                 if dur > 1000.0:
+                    ocnt += 1
                     fout.write('%10.1f  %s\n' % (dur, src))
                     fout.flush()
                     sys.stdout.write('#')
                 else:
+                    ucnt += 1
+                    data[dname].append(dur)
                     sys.stdout.write('.')
                 sys.stdout.flush()
 
@@ -115,6 +119,8 @@ def main():
         print '  min  : %10.1f' % tmp.min()
         print '  max  : %10.1f' % tmp.max()
     print
+    print '  ucnt : %10d' % (ucnt+ocnt)
+    print '  ocnt : %10d' %  ocnt
 
     plt.xlabel('runtime [s]')
     plt.ylabel('number of units')
