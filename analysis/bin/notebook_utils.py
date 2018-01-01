@@ -8,6 +8,7 @@ import radical.analytics as ra
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 
+from cycler import cycler
 from IPython.core.display import display, HTML
 
 pd.set_option('expand_frame_repr', False)
