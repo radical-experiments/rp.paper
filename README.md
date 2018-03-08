@@ -1,2 +1,1 @@
-# rp-paper-ipdps2018
-
+# rp-paper
