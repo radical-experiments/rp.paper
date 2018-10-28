@@ -34,33 +34,41 @@ UNIT_DURATIONS = {
 #
 def main():
 
-    data    = dict()
-    ws_path = 'data/weak_scaling_synapse_titan/optimized'
-    ss_path = 'data/strong_scaling_synapse_titan'
-    t_path  = 'data/tests'
+    pwd  = os.path.dirname(__file__)
+    root = '%s/../../' % pwd
+
+    data       = dict()
+  # ws_path    = '%s/data/weak_scaling_synapse_titan/optimized' % root
+  # ss_path    = '%s/data/strong_scaling_synapse_titan'         % root
+    sched_path = '%s/rawdata/scheduling'                        % root
     sources = [
              # '%s/rp.session.thinkie.merzky.017494.0007'    % t_path,
+            '%s/rp.session.titan-ext1.merzky1.017832.0006' % sched_path,
+            '%s/rp.session.titan-ext1.merzky1.017832.0007' % sched_path,
+         #  '%s/ws_syn_titan_256_32_8192_60_1.0'           % sched_path,
+         #  '%s/scheduler_cont_4096.2'                     % sched_path,
+         #  '%s/scheduler_hombre_4096.7'                   % sched_path,
 
-            '%s/ws_syn_titan_32_32_1024_60_1.0'           % ws_path,
-            '%s/ws_syn_titan_32_32_1024_60_1.1'           % ws_path,
-            '%s/ws_syn_titan_64_32_2048_60_2.0'           % ws_path,
-            '%s/ws_syn_titan_64_32_2048_60_2.1'           % ws_path,
-            '%s/ws_syn_titan_128_32_4096_60_3.0'          % ws_path,
-            '%s/ws_syn_titan_128_32_4096_60_3.1'          % ws_path,
-            '%s/ws_syn_titan_256_32_8192_60_4.0'          % ws_path,
-            '%s/ws_syn_titan_256_32_8192_60_4.1'          % ws_path,
-            '%s/ws_syn_titan_512_32_16384_60_5.0'         % ws_path,
-            '%s/ws_syn_titan_512_32_16384_60_5.1'         % ws_path,
-            '%s/ws_syn_titan_1024_32_32768_60_6.0'        % ws_path,
-            '%s/ws_syn_titan_1024_32_32768_60_6.1'        % ws_path,
-            '%s/ws_syn_titan_2048_32_65536_60_7.0'        % ws_path,
-            '%s/ws_syn_titan_2048_32_65536_60_7.1'        % ws_path,
-            '%s/ws_syn_titan_4096_32_131072_60_8.0'       % ws_path,
-           
-            '%s/rp.session.titan-ext1.itoman.017473.0000' % ss_path,
-            '%s/rp.session.titan-ext1.itoman.017491.0004' % ss_path,
-            '%s/rp.session.titan-ext1.itoman.017492.0001' % ss_path,
-            '%s/rp.session.titan-ext2.itoman.017467.0000' % ss_path,
+          # '%s/ws_syn_titan_32_32_1024_60_1.0'           % ws_path,
+          # '%s/ws_syn_titan_32_32_1024_60_1.1'           % ws_path,
+          # '%s/ws_syn_titan_64_32_2048_60_2.0'           % ws_path,
+          # '%s/ws_syn_titan_64_32_2048_60_2.1'           % ws_path,
+          # '%s/ws_syn_titan_128_32_4096_60_3.0'          % ws_path,
+          # '%s/ws_syn_titan_128_32_4096_60_3.1'          % ws_path,
+          # '%s/ws_syn_titan_256_32_8192_60_4.0'          % ws_path,
+          # '%s/ws_syn_titan_256_32_8192_60_4.1'          % ws_path,
+          # '%s/ws_syn_titan_512_32_16384_60_5.0'         % ws_path,
+          # '%s/ws_syn_titan_512_32_16384_60_5.1'         % ws_path,
+          # '%s/ws_syn_titan_1024_32_32768_60_6.0'        % ws_path,
+          # '%s/ws_syn_titan_1024_32_32768_60_6.1'        % ws_path,
+          # '%s/ws_syn_titan_2048_32_65536_60_7.0'        % ws_path,
+          # '%s/ws_syn_titan_2048_32_65536_60_7.1'        % ws_path,
+          # '%s/ws_syn_titan_4096_32_131072_60_8.0'       % ws_path,
+          #
+          # '%s/rp.session.titan-ext1.itoman.017473.0000' % ss_path,
+          # '%s/rp.session.titan-ext1.itoman.017491.0004' % ss_path,
+          # '%s/rp.session.titan-ext1.itoman.017492.0001' % ss_path,
+          # '%s/rp.session.titan-ext2.itoman.017467.0000' % ss_path,
          
                ]
 
@@ -88,6 +96,8 @@ def main():
 
         for unit in units.get():
             for dname in UNIT_DURATIONS:
+              # pprint.pprint(unit.events)
+              # print unit.uid, dname, UNIT_DURATIONS[dname]
                 dur = unit.duration(event=UNIT_DURATIONS[dname])
                 if dur > 1000.0:
                     ocnt += 1
