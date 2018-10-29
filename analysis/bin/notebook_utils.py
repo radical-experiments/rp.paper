@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import scipy as sp
 import pandas as pd
@@ -9,6 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 
 from cycler import cycler
+from radical.utils.profile import *
+from radical.pilot.states import *
 from IPython.core.display import display, HTML
 
 pd.set_option('expand_frame_repr', False)
@@ -132,6 +135,19 @@ event_durations = {
     'Executing'          : [{ru.STATE: None, ru.EVENT: 'exec_ok'}                   , {ru.STATE: None, ru.EVENT: 'exec_stop'}],
     'Unscheduling'       : [{ru.STATE: None, ru.EVENT: 'unschedule_start'}          , {ru.STATE: None, ru.EVENT: 'unschedule_stop'}]
 }
+
+UNIT_DURATIONS = {
+        'exec-tot' : [{STATE: AGENT_EXECUTING,              EVENT: 'state'        },
+                      {STATE: AGENT_STAGING_OUTPUT_PENDING, EVENT: 'state'        }],
+        'exec-rp'  : [{STATE: None,                         EVENT: 'exec_start'   },
+                      {STATE: None,                         EVENT: 'exec_stop'    }],
+        'exec-cu'  : [{STATE: None,                         EVENT: 'cu_start'     },
+                      {STATE: None,                         EVENT: 'cu_exec_stop' }],
+        'exec-orte': [{STATE: None,                         EVENT: 'cu_exec_start'},
+                      {STATE: None,                         EVENT: 'cu_exec_stop' }],
+        'exec-app' : [{STATE: None,                         EVENT: 'app_start'    },
+                      {STATE: None,                         EVENT: 'app_stop'     }]}
+
 
 # ----------------------------------------------------------------------------
 # Utils
@@ -271,3 +287,35 @@ def get_df_unit_events(session):
     # Durations chunk level
 
     return df
+
+
+def get_unit_durations(data, sources):
+    for dname in UNIT_DURATIONS:
+        data[dname]  = list()
+
+    # get the numbers we actually want to plot
+    fout = open('outliers.dat', 'w')
+    ucnt = 0
+    ocnt = 0
+
+    for src in sources:
+        # always point to the tarballs
+        if src[-4:] != '.tbz':
+            src += '.tbz'
+
+        session = ra.Session(src, 'radical.pilot')
+        units   = session.filter(etype='unit', inplace=True)
+        sid     = session.uid
+
+        for unit in units.get():
+            for dname in UNIT_DURATIONS:
+                dur = unit.duration(event=UNIT_DURATIONS[dname])
+                if dur > 1000.0:
+                    ocnt += 1
+                    fout.write('%10.1f  %s\n' % (dur, src))
+                    fout.flush()
+                else:
+                    ucnt += 1
+                    data[dname].append(dur)
+                sys.stdout.flush()
+    return data
