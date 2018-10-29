@@ -125,7 +125,7 @@ event_list = [
     # {ru.STATE: 'DONE'                         , ru.EVENT: 'state'           },
 ]
 
-# Durations from events
+# Durations for events concurrency and scatter plots
 event_durations = {
     'Scheduling'         : [{ru.STATE: None, ru.EVENT: 'schedule_try'}              , {ru.STATE: None, ru.EVENT: 'schedule_ok'}],
     'Queuing Execution'  : [{ru.STATE: 'AGENT_EXECUTING_PENDING', ru.EVENT: 'state'}, {ru.STATE: 'AGENT_EXECUTING', ru.EVENT: 'state'}],
@@ -136,6 +136,8 @@ event_durations = {
     'Unscheduling'       : [{ru.STATE: None, ru.EVENT: 'unschedule_start'}          , {ru.STATE: None, ru.EVENT: 'unschedule_stop'}]
 }
 
+
+# Unit durations for Tx distribution plots
 UNIT_DURATIONS = {
         'exec-tot' : [{STATE: AGENT_EXECUTING,              EVENT: 'state'        },
                       {STATE: AGENT_STAGING_OUTPUT_PENDING, EVENT: 'state'        }],
@@ -147,6 +149,7 @@ UNIT_DURATIONS = {
                       {STATE: None,                         EVENT: 'cu_exec_stop' }],
         'exec-app' : [{STATE: None,                         EVENT: 'app_start'    },
                       {STATE: None,                         EVENT: 'app_stop'     }]}
+
 
 
 # ----------------------------------------------------------------------------

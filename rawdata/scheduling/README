@@ -1,4 +1,3 @@
 ws_syn_titan_256_32_8192_60_1.0.tbz : CONTINUOUS, POPEN
-ws_syn_titan_256_32_8192_60_1.1.tbz : HOMBRE, SHELLFS
 rp.session.titan-ext1.merzky1.017832.0007.tbz : 2048 units, 65k cores, HOMBRE, SHELLFS
 rp.session.titan-ext1.merzky1.017832.0006.tbz :  256 units,  8k cores, HOMBRE, SHELLFS
