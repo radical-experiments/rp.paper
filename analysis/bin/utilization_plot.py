@@ -92,8 +92,8 @@ PILOT_DURATIONS = {
                          {STATE: None,            EVENT: 'orte_dvm_stop'    }],
         'p_setup_2'   : [{STATE: None,            EVENT: 'orte_dvm_stop'    },
                          {STATE: PMGR_ACTIVE,     EVENT: 'state'            }],
-        'p_uexec'     : [{STATE: PMGR_ACTIVE,     EVENT: 'state'            },
-                         {STATE: None,            EVENT: 'cmd'              }],
+      # 'p_uexec'     : [{STATE: PMGR_ACTIVE,     EVENT: 'state'            },
+      #                  {STATE: None,            EVENT: 'cmd'              }],
         'p_term'      : [{STATE: None,            EVENT: 'cmd'              },
                          {STATE: None,            EVENT: 'bootstrap_1_stop' }]}
 
@@ -116,14 +116,16 @@ UNIT_DURATIONS = {
         'u_unschedule': [{STATE: None,            EVENT: 'app_stop'         },
                          {STATE: None,            EVENT: 'unschedule_stop'  }]}
 
-DERIVED_DURATIONS = ['p_agent', 'p_idle', 'p_setup']
+DERIVED_DURATIONS = ['p_agent', 'p_cold', 'p_uexec', 'p_wait', 'p_idle', 'p_setup']
 
 TRANSLATE_KEYS    = {
                      'p_agent'     : 'agent nodes',
                      'p_boot'      : 'pilot bootstrap',
                      'p_setup'     : 'pilot setup',
+                     'p_cold'      : 'pilot cold',
                      'p_orte'      : 'orte  setup',
                      'p_term'      : 'pilot termination',
+                     'p_wait'      : 'pilot wait',
                      'p_idle'      : 'pilot idle',
 
                      'u_equeue'    : 'CU queued',
@@ -139,6 +141,7 @@ TRANSLATE_KEYS    = {
 ORDERED_KEYS      = [
                      'p_boot',
                      'p_setup',
+                     'p_cold',
                      'p_orte',
                      'u_equeue',
                      'u_eprep',
@@ -148,6 +151,7 @@ ORDERED_KEYS      = [
                      'u_exec_app',
                      'u_unschedule',
                      'p_idle',
+                     'p_wait',
                      'p_term',
                      'p_agent',
                      ]
@@ -164,18 +168,18 @@ if __name__ == '__main__':
         ws_path = 'data/weak_scaling_synapse_titan/optimized'
         ss_path = 'data/strong_scaling_synapse_titan'
         sources = [
-                   '%s/rp.session.titan-ext2.itoman.017467.0000' % ss_path,
-                   '%s/ws_syn_titan_32_32_1024_60_1.0'           % ws_path,
-                   '%s/ws_syn_titan_32_32_1024_60_1.1'           % ws_path,
-                   '%s/ws_syn_titan_64_32_2048_60_2.0'           % ws_path,
-                   '%s/ws_syn_titan_64_32_2048_60_2.1'           % ws_path,
-                   '%s/ws_syn_titan_128_32_4096_60_3.0'          % ws_path,
-                   '%s/ws_syn_titan_128_32_4096_60_3.1'          % ws_path,
-                   '%s/ws_syn_titan_256_32_8192_60_4.0'          % ws_path,
-                   '%s/ws_syn_titan_256_32_8192_60_4.1'          % ws_path,
+                 # '%s/rp.session.titan-ext2.itoman.017467.0000' % ss_path,
+                 # '%s/ws_syn_titan_32_32_1024_60_1.0'           % ws_path,
+                 # '%s/ws_syn_titan_32_32_1024_60_1.1'           % ws_path,
+                 # '%s/ws_syn_titan_64_32_2048_60_2.0'           % ws_path,
+                 # '%s/ws_syn_titan_64_32_2048_60_2.1'           % ws_path,
+                 # '%s/ws_syn_titan_128_32_4096_60_3.0'          % ws_path,
+                 # '%s/ws_syn_titan_128_32_4096_60_3.1'          % ws_path,
+                 # '%s/ws_syn_titan_256_32_8192_60_4.0'          % ws_path,
+                 # '%s/ws_syn_titan_256_32_8192_60_4.1'          % ws_path,
                    '%s/ws_syn_titan_1024_32_32768_60_6.1'        % ws_path,
-                   '%s/ws_syn_titan_2048_32_65536_60_7.0'        % ws_path,
-                   '%s/ws_syn_titan_2048_32_65536_60_7.1'        % ws_path,
+                 # '%s/ws_syn_titan_2048_32_65536_60_7.0'        % ws_path,
+                 # '%s/ws_syn_titan_2048_32_65536_60_7.1'        % ws_path,
                    ]
 
 
@@ -225,8 +229,8 @@ if __name__ == '__main__':
                 if pilot.cfg['agents'][agent].get('target') == 'node':
                     anodes += 1
             walltime = pilot.duration(event=PILOT_DURATIONS['p_total'])
-            psize    = pilot.description['cores']  - anodes * cpn
-            utilization[sid]['p_agent'] = walltime * anodes * cpn
+          # psize    = pilot.description['cores']  - anodes * cpn
+          # utilization[sid]['p_agent'] = walltime * anodes * cpn
 
             # FIXME: there is something wrong with the above, this triggers
             #        consistency checks
@@ -250,13 +254,42 @@ if __name__ == '__main__':
               #     print '%-20s: %7.2f' % (duration, dur)
 
 
+        # first timestamp of any unit to get scheduled
+        t_pilot_act = pilot.states[PMGR_ACTIVE][TIME]
+        for e in pilot.events:
+            if e[EVENT] == 'cmd':
+                print e
+                t_pilot_term = e[TIME]
+
+
         # we do the same for the unit durations - but here we add up the
         # contributions for all individual units.
+        t_unit_min = None
+        t_unit_max = None
         for unit in units.get():
             usize = unit.description['cores']
             for duration in UNIT_DURATIONS:
                 dur = unit.duration(event=UNIT_DURATIONS[duration])
                 utilization[sid][duration] += dur * usize
+
+          # t_sched  = unit.states[AGENT_SCHEDULING][TIME]
+            for e in unit.events:
+                if e[EVENT] == 'schedule_ok':
+                    t_sched = e[TIME]
+                if e[EVENT] == 'unschedule_stop':
+                    t_usched = e[TIME]
+            if t_unit_min is None: t_unit_min = t_sched
+            else                 : t_unit_min = min(t_unit_min, t_sched)
+            if t_unit_max is None: t_unit_max = t_usched
+            else                 : t_unit_max = max(t_unit_max, t_usched)
+
+        print 't_unit_min  : %f' % t_unit_min
+        print 't_unit_max  : %f' % t_unit_max
+        print 't_pilot_act : %f' % t_pilot_act
+        print 'u_pilot_term: %f' % t_pilot_term
+        utilization[sid]['p_cold']  = (t_unit_min   - t_pilot_act) * psize
+        utilization[sid]['p_wait']  = (t_pilot_term - t_unit_max ) * psize
+        utilization[sid]['p_uexec'] = (t_unit_max   - t_unit_min ) * psize
 
 
         # ----------------------------------------------------------------------
@@ -281,7 +314,7 @@ if __name__ == '__main__':
                 parts += utilization[sid][p]
                 print '%-10s: %s' % (p, utilization[sid][p])
         print 'pilot: %10.4f - %10.4f = %7.4f' % (tot, parts, tot - parts)
-        assert(abs(tot - parts) < 0.0001), '%s == %s' % (tot, parts)
+      # assert(abs(tot - parts) < 0.0001), '%s == %s' % (tot, parts)
 
         # same for unit consistency
         parts  = 0.0
@@ -351,10 +384,10 @@ if __name__ == '__main__':
             if ABSOLUTE: data[key].append(util_abs)
             else       : data[key].append(util_rel)
 
-        assert(abs(tot_abs - sum_abs) < 0.0001)
-        assert(abs(tot_rel - sum_rel) < 0.0001)
-      # print 'abs: %10.1f - %10.1f = %4.1f' % (tot_abs, sum_abs, tot_abs-sum_abs)
-      # print 'rel: %10.1f - %10.1f = %4.1f' % (tot_rel, sum_rel, tot_rel-sum_rel)
+      # assert(abs(tot_abs - sum_abs) < 0.0001)
+      # assert(abs(tot_rel - sum_rel) < 0.0001)
+        print 'abs: %10.1f - %10.1f = %4.1f' % (tot_abs, sum_abs, tot_abs-sum_abs)
+        print 'rel: %10.1f - %10.1f = %4.1f' % (tot_rel, sum_rel, tot_rel-sum_rel)
 
     print
   # pprint.pprint(data)
