@@ -1,4 +1,3 @@
-. ~/Virtualenvs/stampede2/bin/activate
 export RADICAL_VERBOSE="DEBUG"
 export RADICAL_PILOT_DBURL="mongodb://mturilli:m7ur1ll1@one.radical-project.org:27017/mturilli"
 export RADICAL_LOG_LVL="DEBUG"
