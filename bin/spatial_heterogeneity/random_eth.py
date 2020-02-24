@@ -17,7 +17,7 @@ if __name__ == '__main__':
                    'project'       : 'FTA-Jha',
                    'queue'         : 'development',
                    # 'access_schema' : 'gsissh',
-                   'runtime'       : 60,
+                   'runtime'       : 120,
                    'exit_on_error' : True,
                    'cores'         : 56
                   }
@@ -27,7 +27,7 @@ if __name__ == '__main__':
         umgr.add_pilots(pilot)
 
         cuds = list()
-        for i in range(512):
+        for i in range(8192):
             cud = rp.ComputeUnitDescription()
             cud.executable       = '/home1/02855/mturilli/bin/hello_rp.sh'
             cud.arguments        = [randint(5, 10) * 1]
