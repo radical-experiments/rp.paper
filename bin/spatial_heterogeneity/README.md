@@ -36,6 +36,7 @@ GitHub does not allow for files > 100MB.
 | rp.session.login2.frontera.tacc.utexas.edu.mturilli.018315.0001 | 2048 | 1\*    | 1:1:1       |
 | rp.session.login2.frontera.tacc.utexas.edu.mturilli.018315.0002 | 4096 | 1\*    | 1:1:1       |
 | rp.session.login2.frontera.tacc.utexas.edu.mturilli.018315.0003 | 8192 | 1\*    | 1:1:1       |
+| rp.session.login2.frontera.tacc.utexas.edu.mturilli.018316.0002 | 8192 | 2      | 1:1:1       |
 
 * \* Due to an error in SAGA configuration, these sessions run on 4 nodes but
   RP thought it had 1 node.
