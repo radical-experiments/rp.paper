@@ -30,7 +30,7 @@ plt.style.use('seaborn-ticks')
 
 # Use LaTeX and its body font for the diagrams' text.
 mpl.rcParams['text.usetex'] = True
-mpl.rcParams['text.latex.unicode'] = True
+# mpl.rcParams['text.latex.unicode'] = True
 mpl.rcParams['font.serif']  = ['Nimbus Roman Becker No9L']
 mpl.rcParams['font.family'] = 'serif'
 
